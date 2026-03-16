@@ -1,0 +1,17 @@
+[build]
+  base = "client"
+  command = "npm run build"
+  publish = "client/build"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_VERSION = "10"
+```
+
+---
+
+## Step 2 — Also create `.node-version` inside `client/`
+
+Create a file called `.node-version` inside your `client/` folder:
+```
+20.11.0
