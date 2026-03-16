@@ -14,6 +14,8 @@ import {
 
 const AI_TRIGGER = /^\/ai\s+/i;
 
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || "http://localhost:5000";
+
 // Load Puter.js once
 if (!document.getElementById("puter-script")) {
   const script = document.createElement("script");
@@ -39,7 +41,6 @@ export default function Chat() {
   useEffect(() => {
     if (!state.roomId) return;
 
-    // Unsubscribe previous listener
     if (firestoreUnsubRef.current) firestoreUnsubRef.current();
 
     const messagesRef = collection(db, "rooms", state.roomId, "messages");
@@ -49,7 +50,6 @@ export default function Chat() {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
           const data = change.doc.data();
-          // Only add messages that came from Firestore (not already in local state)
           const msg = {
             id: change.doc.id,
             senderId: data.senderId,
@@ -82,10 +82,10 @@ export default function Chat() {
       return;
     }
 
-    // Emit via socket (for real-time delivery to all participants)
+    // Emit via socket (real-time delivery)
     socket.emit("chat-message", { text });
 
-    // Also save to Firestore (for persistence)
+    // Save to Firestore (persistence)
     if (state.roomId) {
       addDoc(collection(db, "rooms", state.roomId, "messages"), {
         senderId: socket.id,

@@ -92,7 +92,7 @@ export default function Home() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/rooms", {
+        const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/rooms`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ hostName: name }),
